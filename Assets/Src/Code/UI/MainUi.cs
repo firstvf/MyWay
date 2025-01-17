@@ -6,6 +6,7 @@ namespace Assets.Src.Code.UI
 {
     public class MainUi : MonoBehaviour
     {
+        [SerializeField] private Transform _mainUi;
         [SerializeField] private Button _updateButton;
         [SerializeField] private Button _increaseScoreButton;
         [SerializeField] private Text _score;
@@ -17,17 +18,11 @@ namespace Assets.Src.Code.UI
             _increaseScoreButton.onClick.AddListener(IncreaseScore);
         }
 
-        private void Start()
-        {
-            DataController.Instance.OnLoadDataHandler += Set;
-            DataController.Instance.Load();
-        }
-
-        private void Set()
+        public void OpenMainUi()
         {
             _welcomeMessage.text = DataController.Instance.WelcomeMessage.Message;
             _score.text = DataController.Instance.Settings.Score.ToString();
-            DataController.Instance.OnLoadDataHandler -= Set;
+            _mainUi.gameObject.SetActive(true);
         }
 
         private void UpdateBundle()
