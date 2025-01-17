@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Src.Code.Data
 {
@@ -16,6 +18,31 @@ namespace Assets.Src.Code.Data
                 var json = fileStream.ReadToEnd();
                 var data = JsonConvert.DeserializeObject<T>(json);
                 callback.Invoke(data);
+            }
+        }
+
+        public IEnumerator LoadUrl<T>(string extraKey, string url, Action<T> callback)
+        {
+            UnityWebRequest request = UnityWebRequest.Get(url);
+
+            yield return request.SendWebRequest();
+
+            try
+            {
+                if (request.result != UnityWebRequest.Result.ConnectionError
+                || request.result != UnityWebRequest.Result.ProtocolError)
+                {
+                    string jsonText = request.downloadHandler.text;
+
+                    var data = JsonConvert.DeserializeObject<T>(jsonText);                    
+                    callback.Invoke(data);
+                }
+            }
+            catch (Exception)
+            {
+                Debug.Log("Unable to download from link. Use default load");
+                Load<T>(extraKey, callback);
+                throw;
             }
         }
 

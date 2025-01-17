@@ -9,12 +9,13 @@ namespace Assets.Src.Code.Controllers
     {
         public static DataController Instance { get; private set; }
         public Settings Settings { get; set; }
-        public WelcomeMessage WelcomeMessage { get;private set; }
+        public WelcomeMessage WelcomeMessage { get; private set; }
         public Action OnLoadDataHandler { get; set; }
 
         private IDataService _dataService;
         private readonly string _settingsKey = "Settings";
         private readonly string _welcomeMessageKey = "WelcomeMessage";
+        private readonly string _welcomeMessageUrl = "https://raw.githubusercontent.com/firstvf/MyWay/refs/heads/main/Assets/StreamingAssets/WelcomeMessage.json";
 
         private void Awake()
         {
@@ -22,8 +23,6 @@ namespace Assets.Src.Code.Controllers
             {
                 Instance = this;
                 _dataService = new JsonToFileService();
-                Settings = new();
-                WelcomeMessage = new();
                 return;
             }
 
@@ -34,14 +33,20 @@ namespace Assets.Src.Code.Controllers
         {
             _dataService.Load<Settings>(_settingsKey, data =>
             {
-                Settings.Score = data.Score;
+                Settings = new()
+                {
+                    Score = data.Score
+                };
             });
 
-            _dataService.Load<WelcomeMessage>(_welcomeMessageKey, data =>
+            StartCoroutine(_dataService.LoadUrl<WelcomeMessage>(_welcomeMessageKey, _welcomeMessageUrl, data =>
             {
-                WelcomeMessage.Message = data.Message;
+                WelcomeMessage = new()
+                {
+                    Message = data.Message
+                };
                 OnLoadDataHandler?.Invoke();
-            });
+            }));
         }
 
         public void Save()
