@@ -6,11 +6,15 @@ namespace Assets.Src.Code.UI
 {
     public class MainUi : MonoBehaviour
     {
+        [SerializeField] private DataController _data;
         [SerializeField] private Transform _mainUi;
         [SerializeField] private Button _updateButton;
         [SerializeField] private Button _increaseScoreButton;
         [SerializeField] private Text _score;
         [SerializeField] private Text _welcomeMessage;
+
+        private bool _isRequireToUseCachedScore;
+        private int _cachedScore;
 
         private void Awake()
         {
@@ -18,24 +22,45 @@ namespace Assets.Src.Code.UI
             _increaseScoreButton.onClick.AddListener(IncreaseScore);
         }
 
-        public void OpenMainUi()
+        private void Start()
         {
-            _welcomeMessage.text = DataController.Instance.WelcomeMessage.Message;
-            _score.text = DataController.Instance.Settings.Score.ToString();
-            _mainUi.gameObject.SetActive(true);
+            _data.OnLoadDataHandler += RefreshUi;
+        }
+
+        private void RefreshUi()
+        {
+            _welcomeMessage.text = _data.WelcomeMessage.Message;
+            _score.text = _data.Settings.Score.ToString();
+            _increaseScoreButton.GetComponent<Image>().sprite = _data.SpriteBundle;
+            _updateButton.interactable = true;
+            _isRequireToUseCachedScore = false;
         }
 
         private void UpdateBundle()
-        => DataController.Instance.Save();
+        {
+            _updateButton.interactable = false;
+            _cachedScore = _data.Settings.Score;
+            _isRequireToUseCachedScore = true;
+            _data.Load();
+        }
 
         private void IncreaseScore()
         {
-            DataController.Instance.Settings.Score++;
-            _score.text = DataController.Instance.Settings.Score.ToString();
+            if (!_isRequireToUseCachedScore)
+            {
+                _data.Settings.Score++;
+                _score.text = _data.Settings.Score.ToString();
+            }
+            else
+            {
+                _cachedScore++;
+                _score.text = _cachedScore.ToString();
+            }
         }
 
         private void OnDestroy()
         {
+            _data.OnLoadDataHandler -= RefreshUi;
             _updateButton.onClick.RemoveListener(UpdateBundle);
             _increaseScoreButton.onClick.RemoveListener(IncreaseScore);
         }

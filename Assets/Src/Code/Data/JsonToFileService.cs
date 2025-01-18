@@ -23,26 +23,22 @@ namespace Assets.Src.Code.Data
 
         public IEnumerator LoadUrl<T>(string extraKey, string url, Action<T> callback)
         {
-            UnityWebRequest request = UnityWebRequest.Get(url);
-
-            yield return request.SendWebRequest();
-
-            try
+            using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
-                if (request.result != UnityWebRequest.Result.ConnectionError
-                || request.result != UnityWebRequest.Result.ProtocolError)
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
                 {
                     string jsonText = request.downloadHandler.text;
 
-                    var data = JsonConvert.DeserializeObject<T>(jsonText);                    
+                    var data = JsonConvert.DeserializeObject<T>(jsonText);
                     callback.Invoke(data);
                 }
-            }
-            catch (Exception)
-            {
-                Debug.Log("Unable to download from link. Use default load");
-                Load<T>(extraKey, callback);
-                throw;
+                else
+                {
+                    Debug.Log($"Unable to download {extraKey} from link. Use local load");
+                    Load<T>(extraKey, callback);
+                }
             }
         }
 

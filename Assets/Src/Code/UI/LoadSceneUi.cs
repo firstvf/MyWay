@@ -7,8 +7,9 @@ namespace Assets.Src.Code.UI
 {
     public class LoadSceneUi : MonoBehaviour
     {
+        [SerializeField] private DataController _data;
         [SerializeField] private Transform _loadSceneUi;
-        [SerializeField] private MainUi _mainUi;
+        [SerializeField] private Transform _mainUi;
         [SerializeField] private Slider _slider;
         private Tween _loadTween;
 
@@ -16,8 +17,8 @@ namespace Assets.Src.Code.UI
         {
             _loadSceneUi.gameObject.SetActive(true);
 
-            DataController.Instance.OnLoadDataHandler += SetTweens;
-            DataController.Instance.Load();
+            _data.OnLoadDataHandler += SetTweens;
+            _data.Load();
             _loadTween = _slider.DOValue(0.6f, 2f).SetEase(Ease.InQuart);
         }
 
@@ -31,9 +32,9 @@ namespace Assets.Src.Code.UI
 
         private void OnCompleteLogic()
         {
-            DataController.Instance.OnLoadDataHandler -= SetTweens;            
+            _data.OnLoadDataHandler -= SetTweens;
             _loadSceneUi.gameObject.SetActive(false);
-            _mainUi.OpenMainUi();
+            _mainUi.gameObject.SetActive(true);
         }
     }
 }

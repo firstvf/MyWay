@@ -1519,6 +1519,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf2a669e2e01b1349b452d72bb39f8ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _data: {fileID: 1175410860}
   _loadSceneUi: {fileID: 1198200140}
   _mainUi: {fileID: 313334154}
   _slider: {fileID: 683297562}
@@ -1534,6 +1535,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81f50a85c4bd06d4c9196de97359284e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _data: {fileID: 1175410860}
+  _mainUi: {fileID: 313334154}
   _updateButton: {fileID: 1221891596}
   _increaseScoreButton: {fileID: 232311118}
   _score: {fileID: 1414603857}
