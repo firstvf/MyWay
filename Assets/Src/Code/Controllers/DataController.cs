@@ -1,21 +1,19 @@
 ﻿using Assets.Src.Code.Data;
 using Assets.Src.Code.Data.Jsons;
 using System;
-using System.IO;
 using UnityEngine;
 
 namespace Assets.Src.Code.Controllers
 {
     public class DataController : MonoBehaviour
     {
-        public static DataController Instance { get; private set; }
         public Settings Settings { get; set; }
         public WelcomeMessage WelcomeMessage { get; private set; }
         public Action OnLoadDataHandler { get; set; }
         public Sprite SpriteBundle { get; private set; }
 
-        private IDataService _dataService;
-        private IAssetBundleLoader _assetBundleLoader;
+        private IDataService _dataService = new JsonToFileService();
+        private IAssetBundleLoader _assetBundleLoader = new AssetBundleLoader();
         private readonly string _settingsKey = "Settings";
         private readonly string _welcomeMessageKey = "WelcomeMessage";
         private readonly string _welcomeMessageUrl = "https://raw.githubusercontent.com/firstvf/MyWay/refs/heads/main/Assets/StreamingAssets/WelcomeMessage.json";
@@ -24,19 +22,6 @@ namespace Assets.Src.Code.Controllers
         private int _totalTask;
         private int _completedTask;
         private bool _isAllTasksCompleted => _completedTask == _totalTask;
-
-        private void Awake()
-        {
-            if (Instance == null)
-            {
-                Instance = this;
-                _dataService = new JsonToFileService();
-                _assetBundleLoader = new AssetBundleLoader();
-                return;
-            }
-
-            Destroy(gameObject);
-        }
 
         public void Load()
         {

@@ -1,8 +1,6 @@
-﻿using UnityEngine;
-
-namespace Assets.Src.Code.Data.Jsons
+﻿namespace Assets.Src.Code.Data.Jsons
 {
-    public class WelcomeMessage : MonoBehaviour
+    public class WelcomeMessage
     {
         public string Message;
     }
