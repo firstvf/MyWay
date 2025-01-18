@@ -18,15 +18,24 @@ namespace Assets.Src.Code.UI
             _increaseScoreButton.onClick.AddListener(IncreaseScore);
         }
 
-        public void OpenMainUi()
+        private void Start()
+        {
+            DataController.Instance.OnLoadDataHandler += RefreshUi;
+        }
+
+        private void RefreshUi()
         {
             _welcomeMessage.text = DataController.Instance.WelcomeMessage.Message;
             _score.text = DataController.Instance.Settings.Score.ToString();
-            _mainUi.gameObject.SetActive(true);
+            _increaseScoreButton.GetComponent<Image>().sprite = DataController.Instance.SpriteBundle;            
+            _updateButton.interactable = true;
         }
 
         private void UpdateBundle()
-        => DataController.Instance.Save();
+        {
+            _updateButton.interactable = false;
+            DataController.Instance.Load();
+        }
 
         private void IncreaseScore()
         {
@@ -36,6 +45,7 @@ namespace Assets.Src.Code.UI
 
         private void OnDestroy()
         {
+            DataController.Instance.OnLoadDataHandler -= RefreshUi;
             _updateButton.onClick.RemoveListener(UpdateBundle);
             _increaseScoreButton.onClick.RemoveListener(IncreaseScore);
         }

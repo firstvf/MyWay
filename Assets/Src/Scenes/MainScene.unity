@@ -1520,7 +1520,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _loadSceneUi: {fileID: 1198200140}
-  _mainUi: {fileID: 313334154}
+  _mainUi: {fileID: 2030216234}
   _slider: {fileID: 683297562}
 --- !u!114 &2030216234
 MonoBehaviour:
@@ -1534,6 +1534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81f50a85c4bd06d4c9196de97359284e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _mainUi: {fileID: 313334154}
   _updateButton: {fileID: 1221891596}
   _increaseScoreButton: {fileID: 232311118}
   _score: {fileID: 1414603857}
